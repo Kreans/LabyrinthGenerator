@@ -10,19 +10,28 @@ import java.util.List;
 
 class Block extends Pane {
 
+
     int value;
-    int state;
-    int posX, posY;
+    private int state;
+    private int posX;
+    private int posY;
     private double width, height;
+
+    static class Wall{
+        static int up = 0b0001;
+        static int right = 0b0010;
+        static int down = 0b0100;
+        static int left = 0b1000;
+    }
 
     Block(int value, int posX, int posY, double width, double height) {
 
-        this.value = value;
+        this.value = value; // block's border
         this.posX = posX;
         this.posY = posY;
-        this.width = width;
-        this.height = height;
-        this.state = 0;
+        this.width = width; // in px
+        this.height = height;// in px
+        this.state = 0; // 0 - non visited, 1- in watch list, 2-visited, 3- marked as first block
 
         setPrefHeight(height);
         setPrefWidth(width);
@@ -31,10 +40,35 @@ class Block extends Pane {
         draw();
     }
 
+    int getPosX() {
+        return this.posX;
+    }
+
+    int getPosY() {
+        return this.posY;
+    }
+
+    void changeState() {
+        this.state = (state + 1) % 3;
+    }
+    void setToVisted(){
+        this.state = 2;
+    }
+
+    boolean isVisited() {
+        return this.state != 0;
+    }
+
+    void setStart(boolean start, boolean isVisited) {
+
+        int state = !isVisited ? 0 : 2;
+        this.state = start ? 3 : state;
+        draw();
+    }
 
     private void handleMouseClick(MouseEvent event) {
 
-        System.out.println("Clicked!");
+        Controller.setClickedBlock(this);
     }
 
     void draw() {
@@ -46,14 +80,15 @@ class Block extends Pane {
 
         List<Line> lines = new ArrayList<>();
 
+        //conver border value to walls
         if ((value & 1) == 1) lines.add(new Line(0, 0, this.width, 0));
         if (((value >> 1) & 1) == 1) lines.add(new Line(width, 0, width, height));
         if (((value >> 2) & 1) == 1) lines.add(new Line(0, height, width, height));
         if (((value >> 3) & 1) == 1) lines.add(new Line(0, 0, 0, height));
 
-
         getChildren().clear();
         for (Line line : lines)
             getChildren().add(line);
     }
+
 }
