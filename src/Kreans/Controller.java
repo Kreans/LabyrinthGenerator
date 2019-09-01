@@ -5,6 +5,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
+import javafx.scene.control.Label;
+
 import javafx.scene.layout.Pane;
 
 import java.net.URL;
@@ -19,20 +22,43 @@ public class Controller implements Initializable {
     @FXML
     Button createButton;
 
-    private static int size = 15;   //  The board is square
-    private int delayTime = 50;   //  time in ms
+    @FXML
+    Slider timeSlider, sizeSlider, alphaSlider;
+
+    @FXML
+    Label timeLabel, sizeLabel, alphaLabel;
+
+
     private Block[][] blocks;       //  list of all labyrinth's blocks
     private static Block clickedBlock = null;
     private static boolean isDrawing = false;
 
+    private void initSlider(Slider slider, Label label, int defaultValue) {
+
+        slider.valueProperty().addListener((observable, oldValue, newValue) -> {
+
+            label.setText(Double.toString(newValue.intValue()));
+        });
+
+        slider.setValue(defaultValue);
+        label.setText(Integer.toString(defaultValue));
+
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+
+        initSlider(timeSlider, timeLabel, 50);
+        initSlider(sizeSlider, sizeLabel, 15);
+        initSlider(alphaSlider, alphaLabel, 15);
 
         clearBoard(); // initialize board
     }
 
     private void clearBoard() {
 
+        int size = (int) sizeSlider.getValue();
         blocks = new Block[size][size];
 
         double height = pane.getPrefHeight();
@@ -51,7 +77,8 @@ public class Controller implements Initializable {
         }
     }
 
-    private void changeStateBoard(){ // after drawing set all blocks as visited
+    private void changeStateBoard() { // after drawing set all blocks as visited
+        int size = (int) sizeSlider.getValue();
         for (int x = 0; x < size; ++x) {
             for (int y = 0; y < size; ++y) {
                 int finalX = x;
@@ -67,6 +94,7 @@ public class Controller implements Initializable {
 
     private void drawLabyrinth() throws InterruptedException {     // create labyrinth on board
 
+        int size = (int) sizeSlider.getValue();
         LinkedList<Block> seeList = new LinkedList<>();     //List for visited blocks
         Random r = new Random(System.currentTimeMillis());
 
@@ -78,7 +106,7 @@ public class Controller implements Initializable {
         seeList.getFirst().changeState();          // set first block as visited
         int visitedBlocksCounter = 1;  // count visit block to end algorithm faster
 
-        while (!seeList.isEmpty() && visitedBlocksCounter != size*size) {        // end while visited list is empty
+        while (!seeList.isEmpty() && visitedBlocksCounter != size * size) {        // end while visited list is empty
 
             Block currentBlock = seeList.get(r.nextInt(seeList.size()));
             Platform.runLater(currentBlock::draw);                          // to change gui from another thread
@@ -89,9 +117,9 @@ public class Controller implements Initializable {
             while (neighbours.size() > 0) {
 
                 counter++;
-                if (counter == size) break;    //extra stop condition to e
+                if (counter >= alphaSlider.getValue()) break;    //extra stop condition to break single line
 
-                Thread.sleep(this.delayTime);
+                Thread.sleep((long) timeSlider.getValue());
                 int index = neighbours.size() != 1 ? r.nextInt(neighbours.size()) : 0; // rand neighbour block
                 seeList.addLast(neighbours.get(index)); // add neighbour block to visited list
                 visitedBlocksCounter++;
@@ -109,7 +137,7 @@ public class Controller implements Initializable {
                 neighbours = getNeighbours(currentBlock.getPosX(), currentBlock.getPosY()); // get neighbours of new current block
             }
 
-            Thread.sleep(this.delayTime);
+            Thread.sleep((long) timeSlider.getValue());
 
             //  if current block hasn't got any non-visited neighbour, remove it from visited list and change state to created
             if (getNeighbours(currentBlock.getPosX(), currentBlock.getPosY()).size() == 0) {
@@ -123,6 +151,7 @@ public class Controller implements Initializable {
 
     private List<Block> getNeighbours(int x, int y) {   //  get non-visited block's neighbours
 
+        int size =  (int)sizeSlider.getValue();
         List<Block> neighbours = new ArrayList<>();
 
         // check state if is non-visited
@@ -171,6 +200,7 @@ public class Controller implements Initializable {
 
         clearBoard();
         createButton.setDisable(true);
+        sizeSlider.setDisable(true);
         isDrawing = true;
         new Thread(() -> {
             try {
@@ -179,6 +209,8 @@ public class Controller implements Initializable {
                 e.printStackTrace();
             } finally {
                 Platform.runLater(() -> createButton.setDisable(false));
+                Platform.runLater(() -> sizeSlider.setDisable(false));
+
                 isDrawing = false;
                 clickedBlock = null;
                 changeStateBoard();

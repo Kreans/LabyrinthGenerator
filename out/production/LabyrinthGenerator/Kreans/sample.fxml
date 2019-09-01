@@ -1,23 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Kreans.Controller">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="676.0" prefWidth="839.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Kreans.Controller">
     <children>
-
-        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-            <children>
-                <Button fx:id="createButton" mnemonicParsing="false" onAction="#createButtonClick" text="Button" />
-            </children>
-        </VBox>
-        <Pane fx:id="pane" prefHeight="609.0" prefWidth="584.0">
-            <HBox.margin>
-                <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
-            </HBox.margin>
-        </Pane>
+      <HBox alignment="CENTER" prefHeight="56.0" prefWidth="800.0">
+         <children>
+            <Label text="Labyrinth Generator" textAlignment="CENTER">
+               <font>
+                  <Font size="30.0" />
+               </font></Label>
+         </children>
+      </HBox>
+      <Separator prefWidth="200.0" />
+      <HBox prefHeight="612.0" prefWidth="824.0">
+         <children>
+      
+              <VBox alignment="CENTER" prefHeight="705.0" prefWidth="150.0">
+                  <children>
+                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <Label text="size of labyrinth:">
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Slider fx:id="sizeSlider" max="20.0" min="2.0" value="10.0">
+                           <VBox.margin>
+                              <Insets left="5.0" right="5.0" />
+                           </VBox.margin>
+                        </Slider>
+                        <Label fx:id="sizeLabel" text="Label">
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </VBox.margin>
+                        </Label>
+                     </children>
+                  </VBox>
+                  <Separator prefWidth="200.0" />
+                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <Label alignment="CENTER" contentDisplay="TOP" text="alpha:">
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </VBox.margin></Label>
+                        <Slider fx:id="alphaSlider" max="50.0" min="2.0" prefHeight="14.0" prefWidth="76.0" value="10.0">
+                           <VBox.margin>
+                              <Insets left="5.0" right="5.0" />
+                           </VBox.margin></Slider>
+                        <Label fx:id="alphaLabel" alignment="CENTER" prefHeight="26.0" prefWidth="48.0" text="Label">
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </VBox.margin></Label>
+                     </children>
+                  </VBox>
+                  <Separator prefWidth="200.0" />
+                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <Label text="delay time :">
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </VBox.margin></Label>
+                        <Slider fx:id="timeSlider" max="200.0" min="5.0" value="50.0">
+                           <VBox.margin>
+                              <Insets left="5.0" right="5.0" />
+                           </VBox.margin></Slider>
+                        <Label fx:id="timeLabel" alignment="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </VBox.margin></Label>
+                     </children>
+                  </VBox>
+                  <Separator prefWidth="200.0">
+                     <opaqueInsets>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </opaqueInsets></Separator>
+                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                            <Button fx:id="createButton" mnemonicParsing="false" onAction="#createButtonClick" text="Generete" />
+                     </children>
+                  </VBox>
+                  </children>
+              </VBox>
+            <Separator orientation="VERTICAL" prefHeight="200.0" />
+            <VBox alignment="CENTER" prefHeight="612.0" prefWidth="679.0">
+               <children>
+                    <Pane fx:id="pane" prefHeight="600.0" prefWidth="600.0" />
+               </children></VBox>
+         </children>
+      </HBox>
     </children>
-</HBox>
+</VBox>
